@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { createClient } from "@/src/lib/supabase/client"
-import type { CartItem, Product } from "@/src/lib/types"
+import { createClient } from "../lib/supabase/client"
+import type { CartItem, Product } from "../lib/types"
 import { createContext, useContext, useEffect, useState } from "react"
 import { useAuth } from "./useAuth"
 import { toast } from "./useToast"
