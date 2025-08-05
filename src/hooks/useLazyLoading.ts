@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 interface UseLazyLoadingOptions {

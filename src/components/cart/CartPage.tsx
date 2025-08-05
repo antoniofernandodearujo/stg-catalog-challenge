@@ -19,8 +19,8 @@ export function CartPage() {
         <p className="text-gray-600 dark:text-gray-400 mb-8">Adicione alguns produtos ao seu carrinho para continuar</p>
         <Link href="/catalog">
           <Button>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Continuar Comprando
+            <ArrowLeft className="h-4 w-4 mr-2 dark:text-white" />
+            <span className="dark:text-white">Continuar Comprando</span>
           </Button>
         </Link>
       </div>
@@ -47,7 +47,7 @@ export function CartPage() {
           ))}
 
           <div className="pt-4">
-            <Button variant="outline" onClick={clearCart} className="text-red-600 hover:text-red-700 bg-transparent">
+            <Button variant="outline" onClick={clearCart} className="text-red-600 dark:text-white dark:bg-red-600 hover:text-red-700 bg-transparent">
               Limpar Carrinho
             </Button>
           </div>
@@ -65,7 +65,7 @@ export function CartPage() {
               </div>
 
               <Link href="/checkout" className="block">
-                <Button className="w-full" size="lg">
+                <Button className="w-full dark:text-white" size="lg">
                   Finalizar Pedido
                 </Button>
               </Link>

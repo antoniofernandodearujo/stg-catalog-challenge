@@ -102,8 +102,8 @@ export function ProductDetail({ product, user }: ProductDetailProps) {
                   </div>
                 </div>
 
-                <Button onClick={handleAddToCart} className="w-full" size="lg">
-                  <ShoppingCart className="h-5 w-5 mr-2" />
+                <Button onClick={handleAddToCart} className="w-full dark:text-white" size="lg">
+                  <ShoppingCart className="h-5 w-5 mr-2 " />
                   {user ? `Adicionar ao Carrinho - ${formatPrice(product.price * quantity)}` : 'Fazer Login'}
                 </Button>
               </div>

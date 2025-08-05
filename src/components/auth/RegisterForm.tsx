@@ -230,7 +230,7 @@ export function RegisterForm() {
         </div>
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full dark:text-white" disabled={loading}>
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Cadastrar
       </Button>

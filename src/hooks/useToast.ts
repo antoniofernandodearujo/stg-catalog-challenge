@@ -30,6 +30,7 @@ function genId() {
 
 type ActionType = typeof actionTypes
 
+// Define um tipo Action que pode ser uma das várias ações possíveis
 type Action =
   | {
       type: ActionType["ADD_TOAST"]

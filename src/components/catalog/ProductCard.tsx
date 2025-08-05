@@ -13,7 +13,7 @@ import { useApp } from "@/src/contexts/AppContext"
 import { Button } from "@/src/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/src/components/ui/card"
 import { formatPrice } from "@/src/lib/utils"
-import { ShoppingCart, Plus } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 
 interface ProductCardProps {
   product: Product
@@ -91,17 +91,17 @@ export function ProductCard({ product, user }: ProductCardProps) {
           </CardContent>
         </Link>
 
-        <CardFooter className="p-3 md:p-4 pt-0 mt-auto">
+        <CardFooter className="w-full p-1 md:p-4 pt-0 mt-auto">
           <Button 
             onClick={handleAddToCart} 
-            className="w-full text-sm md:text-base" 
+            className="w-full text-sm md:text-base flex items-center justify-center gap-2 dark:text-white" 
             size="sm"
           >
-            <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-            <span className="hidden sm:inline">
-              {user ? 'Adicionar ao Carrinho' : 'Fazer Login'}
+            <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2"/>
+            <span className="hidden sm:inline dark:text-white">
+              {user ? 'Adicionar' : 'Login'}
             </span>
-            <span className="sm:hidden">
+            <span className="sm:hidden dark:text-white">
               {user ? 'Adicionar' : 'Login'}
             </span>
           </Button>

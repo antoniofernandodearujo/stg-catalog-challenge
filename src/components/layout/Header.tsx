@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useAuth } from "@/src/hooks/useAuth"
 import { useCart } from "@/src/hooks/useCart"
 import { Button } from "@/src/components/ui/button"
-import { ShoppingCart, LogOut, User, LogIn } from "lucide-react"
+import { ShoppingCart, LogOut, User, LogIn, Icon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/src/components/ui/theme-toggle"
 import { useApp } from "@/src/contexts/AppContext"
@@ -21,13 +21,12 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/catalog" className="text-2xl font-bold text-primary">
-              STG Catalog
+            <Link href="/catalog" className="text-2xl font-bold text-primary dark:text-white">
+              STG E-commerce Catalog
             </Link>
           </div>
-
           <div className="flex items-center space-x-2 md:space-x-4">
-            {/* Cart */}
+            {/* Carrinho */}
             <Link href="/cart" className="relative">
               <Button variant="outline" size="sm">
                 <ShoppingCart className="h-4 w-4 mr-2" />
@@ -40,10 +39,10 @@ export function Header() {
               </Button>
             </Link>
 
-            {/* Theme Toggle */}
+            {/* Alternar Tema */}
             <ThemeToggle />
 
-            {/* User Menu */}
+            {/* Menu do Usuário */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">

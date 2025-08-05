@@ -1,6 +1,6 @@
 {
-  "name": "STG Catalog",
-  "short_name": "STG Catalog",
+  "name": "STG E-commerce Catalog",
+  "short_name": "STG E-commerce",
   "description": "Catálogo de produtos com filtros avançados e experiência mobile otimizada",
   "start_url": "/",
   "display": "standalone",

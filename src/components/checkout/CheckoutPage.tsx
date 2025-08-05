@@ -25,15 +25,14 @@ export function CheckoutPage({ user }: CheckoutPageProps) {
     try {
       const total = getCartTotal()
       const message = generateWhatsAppMessage(user, cartItems, total)
-      const whatsappUrl = `https://wa.me/5511999999999?text=${message}`
+      const whatsappUrl = `https://wa.me/5583996160776?text=${message}`
 
-      // Open WhatsApp in new tab
       window.open(whatsappUrl, "_blank")
 
-      // Clear cart after sending
+      // Limpar o carrinho após o checkout
       await clearCart()
 
-      // Redirect to catalog
+      // Redirecionar para o catálogo
       router.push("/catalog")
     } catch (error) {
       console.error("Error during checkout:", error)
@@ -125,7 +124,7 @@ export function CheckoutPage({ user }: CheckoutPageProps) {
                 <Button 
                   onClick={handleWhatsAppCheckout} 
                   disabled={loading} 
-                  className="w-full" 
+                  className="w-full dark:text-white" 
                   size="lg"
                 >
                   <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />

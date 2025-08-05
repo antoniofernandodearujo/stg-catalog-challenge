@@ -1,6 +1,5 @@
 import { LoginForm } from "@/src/components/auth/LoginForm"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Footer } from "@/src/components/layout/Footer"
 
 export default function LoginPage() {
   return (

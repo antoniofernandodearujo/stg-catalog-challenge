@@ -5,7 +5,6 @@ import { useTheme } from 'next-themes'
 
 interface AppState {
   darkMode: boolean
-  wishlist: string[]
   searchHistory: string[]
   recentlyViewed: string[]
   notifications: Notification[]
@@ -26,19 +25,16 @@ interface Notification {
 
 type AppAction =
   | { type: 'TOGGLE_DARK_MODE' }
-  | { type: 'ADD_TO_WISHLIST'; payload: string }
-  | { type: 'REMOVE_FROM_WISHLIST'; payload: string }
   | { type: 'ADD_SEARCH_HISTORY'; payload: string }
   | { type: 'ADD_RECENTLY_VIEWED'; payload: string }
   | { type: 'ADD_NOTIFICATION'; payload: Notification }
   | { type: 'REMOVE_NOTIFICATION'; payload: string }
   | { type: 'UPDATE_FILTERS'; payload: Partial<AppState['filters']> }
   | { type: 'CLEAR_FILTERS' }
-  | { type: 'INITIALIZE_STATE'; payload: Partial<AppState> } // Nova ação para inicialização
+  | { type: 'SET_DARK_MODE'; payload: boolean }
 
 const initialState: AppState = {
-  darkMode: false, // Será sobrescrito pelo resolvedTheme ou localStorage
-  wishlist: [],
+  darkMode: false,
   searchHistory: [],
   recentlyViewed: [],
   notifications: [],
@@ -51,28 +47,12 @@ const initialState: AppState = {
 
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case 'INITIALIZE_STATE':
-      // Mescla o estado carregado com o estado atual,
-      // garantindo que o darkMode venha do payload (que será o resolvedTheme)
-      return { ...state, ...action.payload };
+    case 'SET_DARK_MODE':
+      return { ...state, darkMode: action.payload }
 
     case 'TOGGLE_DARK_MODE':
       return { ...state, darkMode: !state.darkMode }
-    
-    case 'ADD_TO_WISHLIST':
-      return {
-        ...state,
-        wishlist: state.wishlist.includes(action.payload)
-          ? state.wishlist
-          : [...state.wishlist, action.payload]
-      }
-    
-    case 'REMOVE_FROM_WISHLIST':
-      return {
-        ...state,
-        wishlist: state.wishlist.filter(id => id !== action.payload)
-      }
-    
+      
     case 'ADD_SEARCH_HISTORY':
       const newSearchHistory = [action.payload, ...state.searchHistory.filter(s => s !== action.payload)].slice(0, 10)
       return { ...state, searchHistory: newSearchHistory }
@@ -114,9 +94,6 @@ interface AppContextType {
   state: AppState
   dispatch: React.Dispatch<AppAction>
   toggleDarkMode: () => void
-  addToWishlist: (productId: string) => void
-  removeFromWishlist: (productId: string) => void
-  isInWishlist: (productId: string) => boolean
   addSearchHistory: (query: string) => void
   addRecentlyViewed: (productId: string) => void
   addNotification: (notification: Omit<Notification, 'id'>) => void
@@ -127,101 +104,82 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
+const initializeState = (initialState: AppState): AppState => {
+  if (typeof window === 'undefined') return initialState
+
+  try {
+    const serializedState = localStorage.getItem('app-state')
+    if (serializedState) {
+      const savedState = JSON.parse(serializedState)
+      return { ...initialState, ...savedState }
+    }
+  } catch (e) {
+    console.error("Falha ao analisar o estado do aplicativo do localStorage", e)
+  }
+
+  return initialState
+}
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(appReducer, initialState)
-  const { setTheme, resolvedTheme } = useTheme() // Obtenha resolvedTheme aqui
+  const [state, dispatch] = useReducer(appReducer, initialState, initializeState)
+  const { setTheme, resolvedTheme } = useTheme()
 
-  // Efeito para carregar o estado do localStorage E sincronizar o darkMode com next-themes
+  // Efeito para sincronizar o tema resolvido do next-themes com o estado do nosso contexto
+  // Este useEffect agora é a fonte de verdade para o nosso tema, evitando o "flicker"
   useEffect(() => {
-    let loadedState: Partial<AppState> = {};
-    const savedState = localStorage.getItem('app-state');
-    if (savedState) {
-      try {
-        loadedState = JSON.parse(savedState);
-      } catch (e) {
-        console.error("Falha ao analisar o estado do aplicativo do localStorage", e);
-      }
+    if (resolvedTheme && (resolvedTheme === 'dark') !== state.darkMode) {
+      dispatch({ type: 'SET_DARK_MODE', payload: resolvedTheme === 'dark' })
     }
+  }, [resolvedTheme, state.darkMode])
 
-    // Sobrescreva o darkMode do localStorage (ou o padrão) com o resolvedTheme do next-themes
-    // Isso é crucial para a sincronização inicial
-    if (resolvedTheme !== undefined) { // resolvedTheme pode ser undefined na primeira renderização
-      loadedState.darkMode = resolvedTheme === 'dark';
-    }
-
-    // Despache uma ação para inicializar o estado
-    dispatch({ type: 'INITIALIZE_STATE', payload: loadedState });
-
-  }, [resolvedTheme]); // Depende de resolvedTheme para garantir que ele esteja disponível
-
-  // Persistir estado no localStorage (este useEffect está bom como está)
+  // Persistir estado no localStorage
   useEffect(() => {
     localStorage.setItem('app-state', JSON.stringify(state))
   }, [state])
 
-  // Sincronizar dark mode com next-themes (este useEffect está bom como está)
-  useEffect(() => {
-    if (state.darkMode) {
-      setTheme('dark')
-    } else {
-      setTheme('light')
-    }
+  const toggleDarkMode = useCallback(() => {
+    // Ao alternar o tema, chamamos o dispatch para atualizar o estado interno,
+    // e o next-themes se encarrega de atualizar a classe no <html>.
+    // O useEffect acima irá sincronizar o resolvedTheme de volta para o estado.
+    dispatch({ type: 'TOGGLE_DARK_MODE' })
+    setTheme(state.darkMode ? 'light' : 'dark')
   }, [state.darkMode, setTheme])
 
-  const toggleDarkMode = () => {
-    dispatch({ type: 'TOGGLE_DARK_MODE' })
-  }
-
-  const addToWishlist = (productId: string) => {
-    dispatch({ type: 'ADD_TO_WISHLIST', payload: productId })
-  }
-
-  const removeFromWishlist = (productId: string) => {
-    dispatch({ type: 'REMOVE_FROM_WISHLIST', payload: productId })
-  }
-
-  const isInWishlist = (productId: string) => {
-    return state.wishlist.includes(productId)
-  }
-
-  const addSearchHistory = (query: string) => {
+  const addSearchHistory = useCallback((query: string) => {
     dispatch({ type: 'ADD_SEARCH_HISTORY', payload: query })
-  }
+  }, [])
 
-  const addRecentlyViewed = (productId: string) => {
+  const addRecentlyViewed = useCallback((productId: string) => {
     dispatch({ type: 'ADD_RECENTLY_VIEWED', payload: productId })
-  }
+  }, [])
 
-  const addNotification = (notification: Omit<Notification, 'id'>) => {
+  const addNotification = useCallback((notification: Omit<Notification, 'id'>) => {
     const id = Math.random().toString(36).substr(2, 9)
     dispatch({ type: 'ADD_NOTIFICATION', payload: { ...notification, id } })
-  }
+  }, [])
 
-  const removeNotification = (id: string) => {
+  const removeNotification = useCallback((id: string) => {
     dispatch({ type: 'REMOVE_NOTIFICATION', payload: id })
-  }
+  }, [])
 
-  const updateFilters = (filters: Partial<AppState['filters']>) => {
+  const updateFilters = useCallback((filters: Partial<AppState['filters']>) => {
     dispatch({ type: 'UPDATE_FILTERS', payload: filters })
-  }
+  }, [])
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     dispatch({ type: 'CLEAR_FILTERS' })
-  }
+  }, [])
 
   const value: AppContextType = {
     state,
     dispatch,
     toggleDarkMode,
-    addToWishlist,
-    removeFromWishlist,
-    isInWishlist,
     addSearchHistory,
     addRecentlyViewed,
     addNotification,
     removeNotification,
     updateFilters,
-    clearFilters
+    clearFilters,
   }
 
   return (

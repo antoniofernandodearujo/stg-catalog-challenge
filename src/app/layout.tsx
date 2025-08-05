@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
   },
+  icons: {
+    icon: "/favicon.ico"
+  },
+  manifest: "/manifest.json",
 }
 
 export default function RootLayout({
@@ -31,11 +35,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3b82f6" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
-      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

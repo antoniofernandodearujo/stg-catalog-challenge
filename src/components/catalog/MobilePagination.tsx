@@ -40,47 +40,32 @@ export function MobilePagination({
   }
 
   const getVisiblePages = () => {
-    if (totalPages <= 5) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    const pages = []
+
+    // Mostra sempre a página atual, a anterior e a próxima
+    pages.push(currentPage)
+    if (currentPage > 1) {
+      pages.unshift(currentPage - 1)
+    }
+    if (currentPage < totalPages) {
+      pages.push(currentPage + 1)
     }
 
-    const pages = []
-    
-    // Sempre incluir a primeira página
-    pages.push(1)
-    
-    if (currentPage <= 3) {
-      // Se estamos no início: 1, 2, 3, 4, ..., último
-      for (let i = 2; i <= Math.min(4, totalPages - 1); i++) {
-        pages.push(i)
-      }
-      if (totalPages > 4) {
-        pages.push('...')
-        pages.push(totalPages)
-      }
-    } else if (currentPage >= totalPages - 2) {
-      // Se estamos no final: 1, ..., últimas 4 páginas
-      if (totalPages > 4) {
-        pages.push('...')
-      }
-      for (let i = Math.max(2, totalPages - 3); i <= totalPages; i++) {
-        if (!pages.includes(i)) {
-          pages.push(i)
-        }
-      }
-    } else {
-      // Se estamos no meio: 1, ..., atual-1, atual, atual+1, ..., último
-      pages.push('...')
-      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-        pages.push(i)
-      }
+    // Se a primeira página não está visível, adiciona '...'
+    if (!pages.includes(1) && totalPages > 3) {
+      pages.unshift('...')
+      pages.unshift(1)
+    }
+
+    // Se a última página não está visível, adiciona '...'
+    if (!pages.includes(totalPages) && totalPages > 3) {
       pages.push('...')
       pages.push(totalPages)
     }
 
     return pages
   }
-
+  
   const visiblePages = getVisiblePages()
 
   return (
@@ -141,4 +126,4 @@ export function MobilePagination({
       </div>
     </div>
   )
-} 
+}

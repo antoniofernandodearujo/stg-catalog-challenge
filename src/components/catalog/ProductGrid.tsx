@@ -33,7 +33,7 @@ export function ProductGrid({ products, user }: ProductGridProps) {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-foreground mb-2">Nenhum produto encontrado</h3>
-          <p className="text-muted-foreground">Tente ajustar os filtros ou buscar por outro termo.</p>
+          <p className="text-muted-foreground dark:text-white">Tente ajustar os filtros ou buscar por outro termo.</p>
         </div>
       </div>
     )

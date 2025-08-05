@@ -10,12 +10,11 @@ export default async function ProductPage({
 }) {
   const supabase = await createClient()
   
-  // Verificar se o usuário está logado (opcional)
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Await the params promise in Next.js 15
+  // Espera o ID do produto
   const { id } = await params
   const { data: product, error } = await supabase.from("products").select("*").eq("id", id).single()
 

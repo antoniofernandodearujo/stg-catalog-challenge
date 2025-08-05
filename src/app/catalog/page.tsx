@@ -16,8 +16,7 @@ import {
 } from "@/src/components/ui/pagination"
 import { Suspense } from "react"
 
-// Use um número menor de itens por página no mobile
-const ITEMS_PER_PAGE = 8
+const ITEMS_PER_PAGE = 10
 
 export default async function CatalogPage({
   searchParams,
@@ -33,12 +32,10 @@ export default async function CatalogPage({
 }) {
   const supabase = await createClient()
   
-  // Verificar se o usuário está logado (opcional)
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Await the searchParams promise in Next.js 15
   const params = await searchParams
   const searchTerm = params.search || ""
   const category = params.category
@@ -47,18 +44,18 @@ export default async function CatalogPage({
   const maxPrice = params.maxPrice ? Number(params.maxPrice) : 10000
   const sortBy = params.sort || "date"
 
-  // Fetch categories first
+  // Busca categorias únicas e ordenadas
   const { data: categories } = await supabase
     .from("products")
     .select("category")
     .order("category")
 
-  // Get unique categories and remove duplicates
+  // Busca categorias únicas e ordenadas
   const uniqueCategories = Array.from(
     new Set(categories?.map(item => item.category).filter(Boolean) || [])
   ).sort()
 
-  // Fetch max price for filters
+  // Busca o preço máximo dos produtos para os filtros
   const { data: maxPriceData } = await supabase
     .from("products")
     .select("price")
@@ -67,28 +64,27 @@ export default async function CatalogPage({
 
   const maxPriceForFilters = maxPriceData?.[0]?.price || 10000
 
-  // Fetch products with filters, pagination and count
+  // Busca os produtos com base nos filtros
   let query = supabase
     .from("products")
     .select("*", { count: "exact" })
 
-  // Apply search filter
+  // Filtro de pesquisa
   if (searchTerm) {
     query = query.ilike("name", `%${searchTerm}%`)
   }
 
-  // Apply category filter
+  // Filtro de categoria
   if (category) {
     query = query.eq("category", category)
   }
 
-  // Apply price range filter
+  // Filtro de preço
   if (minPrice > 0 || maxPrice < maxPriceForFilters) {
     query = query.gte("price", minPrice).lte("price", maxPrice)
   }
 
-  // Apply sorting
-  // Apply sorting
+  // Aqui tem a lógica de ordenação
   switch (sortBy) {
     case "name":
       query = query.order("name", { ascending: true })
@@ -96,14 +92,11 @@ export default async function CatalogPage({
     case "price":
       query = query.order("price", { ascending: true })
       break
-    case "rating":
-      query = query.order("rating", { ascending: false })
-      break
     default:
       query = query.order("created_at", { ascending: false })
   }
 
-  // Apply pagination after filters to ensure correct counts
+  // Aplica a Paginação
   query = query.range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1)
 
   const { data: products, error, count } = await query
@@ -134,7 +127,7 @@ export default async function CatalogPage({
   ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen dark:bg-gray-900">
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pb-20 md:pb-8">
@@ -144,12 +137,12 @@ export default async function CatalogPage({
         </div>
 
         <div className="mb-6 sm:mb-8 space-y-4 sm:space-y-6">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground text-primary dark:text-white">
             Catálogo de Produtos
           </h1>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <SearchAutocomplete initialValue={searchTerm} />
+            <SearchAutocomplete />
           </div>
           
           <AdvancedFilters categories={uniqueCategories} maxPrice={maxPriceForFilters} />

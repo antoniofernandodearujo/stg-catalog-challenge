@@ -15,7 +15,7 @@ INSERT INTO products (name, description, price, image_url, category) VALUES
 -- Casa
 ('Sofá 3 Lugares', 'Sofá confortável com estrutura de madeira maciça e estofado em tecido premium', 1899.00, 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500', 'Casa'),
 ('Mesa de Jantar', 'Mesa de jantar para 6 pessoas em madeira de demolição com acabamento rústico', 1299.00, 'https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=500', 'Casa'),
-('Luminária Pendente', 'Luminária pendente moderna com design minimalista e luz LED', 349.90, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500', 'Casa'),
+('Luminária Pendente', 'Luminária pendente moderna com design minimalista e luz LED', 349.90, 'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80', 'Casa'),
 ('Kit Panelas Antiaderente', 'Conjunto de 5 panelas antiaderente com cabos ergonômicos', 299.90, 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500', 'Casa'),
 
 -- Esportes
