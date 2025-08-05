@@ -9,12 +9,12 @@ import { ToastNotifications } from "@/src/components/ui/toast-notifications"
 
 const inter = Inter({ subsets: ["latin"] })
 
+// Objeto de Metadata sem a propriedade viewport
 export const metadata: Metadata = {
   title: "STG Catalog - Catálogo de Produtos",
   description: "Catálogo de produtos com filtros avançados, lista de desejos e experiência mobile otimizada",
   keywords: "catálogo, produtos, e-commerce, compras online",
   authors: [{ name: "STG Catalog" }],
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   openGraph: {
     title: "STG Catalog - Catálogo de Produtos",
@@ -27,6 +27,12 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
 }
+
+// Novo export para a propriedade viewport
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RootLayout({
   children,
