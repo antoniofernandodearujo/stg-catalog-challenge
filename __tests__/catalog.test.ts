@@ -1,5 +1,4 @@
 // __tests__/catalog.test.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createClient } from '../src/lib/supabase/client';
 
 const mockProducts = [
@@ -7,10 +6,10 @@ const mockProducts = [
   { id: '2', name: 'Product 2', price: 200, description: 'Description 2', image: 'image2.jpg' }
 ];
 
-vi.mock('../src/lib/supabase/client', () => ({
-  createClient: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn((selector: string, options: any) => {
+jest.mock('../src/lib/supabase/client', () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn((selector: string, options: any) => {
         // Mocka a chamada de select de forma dinâmica
         const baseResult = { data: mockProducts, error: null };
         if (options?.count === 'exact') {
@@ -18,19 +17,21 @@ vi.mock('../src/lib/supabase/client', () => ({
         }
         return baseResult;
       }),
-      eq: vi.fn((key, value) => {
+      eq: jest.fn((key, value) => {
         if (key === 'id' && value === '1') {
-          return { single: vi.fn(() => ({ data: mockProducts[0], error: null })) };
+          return { single: jest.fn(() => ({ data: mockProducts[0], error: null })) };
         }
         if (key === 'id' && value === 'invalid-id') {
-          return { single: vi.fn(() => ({ data: null, error: { message: 'Product not found' } })) };
+          return { single: jest.fn(() => ({ data: null, error: { message: 'Product not found' } })) };
         }
         if (key === 'category') {
           return { data: mockProducts, error: null };
         }
+        // Retorno padrão para cobrir outros casos
+        return { single: jest.fn(() => ({ data: null, error: { message: 'Not found' } })) };
       }),
-      ilike: vi.fn(() => ({ data: [mockProducts[0]], error: null, count: 1 })),
-      gte: vi.fn(() => ({ lte: vi.fn(() => ({ data: mockProducts, error: null })) }))
+      ilike: jest.fn(() => ({ data: [mockProducts[0]], error: null, count: 1 })),
+      gte: jest.fn(() => ({ lte: jest.fn(() => ({ data: mockProducts, error: null })) }))
     }))
   }))
 }));

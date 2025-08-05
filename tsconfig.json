@@ -14,7 +14,7 @@
     "jsx": "preserve",
     "incremental": true,
     "types": [
-      "vitest/globals"
+      "jest"
     ],
     "plugins": [
       {

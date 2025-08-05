@@ -1,10 +1,7 @@
-/// <reference types="vitest/globals" />
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { useCart, CartProvider } from '../src/hooks/useCart';
 import { renderHook, act } from '@testing-library/react';
 import type { CartItem, Product } from '../src/lib/types';
 import type { User } from '@supabase/supabase-js';
+import { useCart, CartProvider } from '../src/hooks/useCart';
 
 // Mocks
 const mockProduct = {
@@ -30,83 +27,94 @@ const mockUser: User = {
   user_metadata: {},
 };
 
-// Mocks globais para evitar hoisting
-// Eles serão redefinidos em cada teste
-const useAuthMock = vi.fn();
-const createClientMock = vi.fn();
-const toastMock = vi.fn();
-
-// Mock do Supabase
+// Mock para o cliente Supabase
 const supabaseMock = {
-  from: vi.fn(() => supabaseMock),
-  select: vi.fn(() => supabaseMock),
-  insert: vi.fn(() => supabaseMock),
-  update: vi.fn(() => supabaseMock),
-  delete: vi.fn(() => supabaseMock),
-  eq: vi.fn(() => supabaseMock),
+  from: jest.fn(() => supabaseMock),
+  select: jest.fn(() => supabaseMock),
+  insert: jest.fn(() => supabaseMock),
+  update: jest.fn(() => supabaseMock),
+  delete: jest.fn(() => supabaseMock),
+  eq: jest.fn(() => supabaseMock),
+  then: jest.fn(() => supabaseMock),
 };
 
-// Vi.mock é elevado, então ele precisa ser self-contained
-vi.mock('../src/lib/supabase/client', () => ({
-  createClient: createClientMock,
+jest.mock('../src/lib/supabase/client', () => ({
+  createClient: jest.fn(() => supabaseMock),
 }));
 
-vi.mock('../src/hooks/useAuth', () => ({
-  useAuth: useAuthMock,
+// Mock para o hook de autenticação
+jest.mock('../src/hooks/useAuth', () => ({
+  useAuth: jest.fn(() => ({ user: mockUser })),
 }));
 
-vi.mock('../src/hooks/useToast', () => ({
-  toast: toastMock,
+// Mock para o hook de toast
+jest.mock('../src/hooks/useToast', () => ({
+  toast: jest.fn(),
 }));
 
 describe('Cart Module', () => {
   let cartItemsData: CartItem[] = [];
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-    cartItemsData = [];
-    useAuthMock.mockReturnValue({ user: mockUser });
-    createClientMock.mockReturnValue(supabaseMock);
-
-    // Simula o comportamento do Supabase
-    (supabaseMock.select as vi.MockedFunction<any>).mockResolvedValue({ data: cartItemsData, error: null });
-
-    (supabaseMock.insert as vi.MockedFunction<any>).mockImplementation((item: any) => {
+  // Mocks do supabase, agora com implementação mais precisa
+  const mockSupabaseImplementation = () => ({
+    select: () => ({
+      eq: (key: string, value: any) => ({
+        then: (callback: (arg0: { data: CartItem[]; error: null; }) => void) => {
+          const result = cartItemsData.filter(item => item[key] === value);
+          callback({ data: result, error: null });
+        },
+      }),
+    }),
+    // O insert agora adiciona o item e retorna
+    insert: async (item: any) => {
       const newCartItem = {
         ...item,
         id: `item-${Date.now()}`,
         product: mockProduct,
       };
       cartItemsData.push(newCartItem);
-      (supabaseMock.select as vi.MockedFunction<any>).mockResolvedValue({ data: cartItemsData, error: null });
       return { data: [newCartItem], error: null };
-    });
-
-    (supabaseMock.update as vi.MockedFunction<any>).mockImplementation(({ quantity }) => {
-      const itemId = (supabaseMock.eq as vi.MockedFunction<any>).mock.calls[0][1];
-      const itemToUpdate = cartItemsData.find(item => item.id === itemId);
-      if (itemToUpdate) {
-        itemToUpdate.quantity = quantity;
-      }
-      (supabaseMock.select as vi.MockedFunction<any>).mockResolvedValue({ data: cartItemsData, error: null });
-      return { data: itemToUpdate ? [itemToUpdate] : [], error: null };
-    });
-
-    (supabaseMock.delete as vi.MockedFunction<any>).mockImplementation(() => {
-      const itemId = (supabaseMock.eq as vi.MockedFunction<any>).mock.calls[0][1];
-      cartItemsData = cartItemsData.filter(cartItem => cartItem.id !== itemId);
-      (supabaseMock.select as vi.MockedFunction<any>).mockResolvedValue({ data: cartItemsData, error: null });
-      return { data: [], error: null };
-    });
+    },
+    // O update agora recebe um objeto de dados e retorna uma mock de 'eq'
+    update: (updateData: any) => ({
+      eq: async (key: string, value: any) => {
+        const itemToUpdate = cartItemsData.find(item => item[key] === value);
+        if (itemToUpdate) {
+          Object.assign(itemToUpdate, updateData);
+        }
+        return { data: itemToUpdate ? [itemToUpdate] : [], error: null };
+      },
+    }),
+    // O delete continua o mesmo
+    delete: () => ({
+      eq: async (key: string, value: any) => {
+        cartItemsData = cartItemsData.filter(item => item[key] !== value);
+        return { data: [], error: null };
+      },
+    }),
   });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    cartItemsData = [];
+    
+    (supabaseMock.from as jest.Mock).mockImplementation(() => mockSupabaseImplementation());
+  });
+
+  // Renderiza o hook e espera a busca inicial do carrinho.
+  // O `act` garante que o estado é atualizado antes do retorno do hook.
+  const renderHookAndFetchCart = async () => {
+    let hookResult: any;
+    await act(async () => {
+      hookResult = renderHook(() => useCart(), { wrapper: CartProvider });
+    });
+    return hookResult;
+  };
 
   describe('Cart Operations', () => {
     it('should add item to cart', async () => {
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      const { result } = await renderHookAndFetchCart();
       
-      // Simula a resposta inicial vazia do Supabase
-      (supabaseMock.select as vi.MockedFunction<any>).mockResolvedValueOnce({ data: [], error: null });
-
       await act(async () => {
         await result.current.addToCart(mockProduct);
       });
@@ -118,7 +126,8 @@ describe('Cart Module', () => {
 
     it('should add item to cart if it already exists', async () => {
       cartItemsData.push({ product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id });
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      
+      const { result } = await renderHookAndFetchCart();
 
       await act(async () => {
         await result.current.addToCart(mockProduct);
@@ -130,7 +139,8 @@ describe('Cart Module', () => {
 
     it('should update quantity of existing item', async () => {
       cartItemsData.push({ product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id });
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      
+      const { result } = await renderHookAndFetchCart();
 
       await act(async () => {
         await result.current.updateQuantity('item-1', 3);
@@ -142,7 +152,8 @@ describe('Cart Module', () => {
 
     it('should remove item from cart', async () => {
       cartItemsData.push({ product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id });
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      
+      const { result } = await renderHookAndFetchCart();
 
       await act(async () => {
         await result.current.removeFromCart('item-1');
@@ -156,7 +167,8 @@ describe('Cart Module', () => {
         { product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id },
         { product: { ...mockProduct, id: '2' }, quantity: 1, product_id: '2', id: 'item-2', user_id: mockUser.id }
       );
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      
+      const { result } = await renderHookAndFetchCart();
 
       await act(async () => {
         await result.current.clearCart();
@@ -167,23 +179,30 @@ describe('Cart Module', () => {
   });
 
   describe('Cart Calculations', () => {
+    // Agora o beforeEach já carrega o mock inicial, então não precisa duplicar.
+    beforeEach(() => {
+        cartItemsData.push(
+            { product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id },
+            { product: { ...mockProduct, id: '2', price: 200 }, quantity: 1, product_id: '2', id: 'item-2', user_id: mockUser.id }
+        );
+    });
+
     it('should calculate correct cart total', async () => {
-      cartItemsData.push(
-        { product: mockProduct, quantity: 1, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id },
-        { product: { ...mockProduct, id: '2', price: 200 }, quantity: 1, product_id: '2', id: 'item-2', user_id: mockUser.id }
-      );
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      const { result } = await renderHookAndFetchCart();
 
       const total = result.current.getCartTotal();
       expect(total).toBe(300);
     });
 
     it('should calculate correct total with quantity updates', async () => {
-      cartItemsData.push({ product: mockProduct, quantity: 3, product_id: mockProduct.id, id: 'item-1', user_id: mockUser.id });
-      const { result } = renderHook(() => useCart(), { wrapper: CartProvider });
+      const { result } = await renderHookAndFetchCart();
+
+      await act(async () => {
+        await result.current.updateQuantity('item-1', 3);
+      });
 
       const total = result.current.getCartTotal();
-      expect(total).toBe(300);
+      expect(total).toBe(500); // 3 * 100 + 1 * 200 = 500
     });
   });
 });

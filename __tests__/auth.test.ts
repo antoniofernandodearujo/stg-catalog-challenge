@@ -1,22 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createClient } from '../src/lib/supabase/client';
 
 // Mocka o createClient do Supabase para que os testes não dependam de variáveis de ambiente.
-vi.mock('../src/lib/supabase/client', () => ({
-  createClient: vi.fn(() => ({
+jest.mock('../src/lib/supabase/client', () => ({
+  createClient: jest.fn(() => ({
     auth: {
-      signInWithPassword: vi.fn(),
-      signUp: vi.fn(),
-      signOut: vi.fn(),
-      getUser: vi.fn()
+      signInWithPassword: jest.fn(),
+      signUp: jest.fn(),
+      signOut: jest.fn(),
+      getUser: jest.fn()
     },
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(),
-        ilike: vi.fn(),
-        order: vi.fn(),
-        range: vi.fn(),
-        single: vi.fn()
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(),
+        ilike: jest.fn(),
+        order: jest.fn(),
+        range: jest.fn(),
+        single: jest.fn()
       }))
     }))
   }))

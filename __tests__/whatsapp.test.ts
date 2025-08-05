@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest';
 import { generateWhatsAppMessage } from '../src/lib/utils';
 
 describe('WhatsApp Integration', () => {
@@ -43,14 +42,6 @@ describe('WhatsApp Integration', () => {
         const message = generateWhatsAppMessage(mockUser, mockCartItems, total);
         const decodedMessage = decodeURIComponent(message);
         
-        // A asserção já está correta. A falha indica que a string de saída tem uma diferença
-        // sutil. Verifique se o espaço entre "R$" e "350,00" é um espaço normal ou um non-breaking space.
-        // O `toContain` geralmente é robusto o suficiente, mas pode haver casos específicos.
-        // O `expect(decodedMessage).toContain('R$ 350,00')` deve funcionar.
-        // O erro pode ser um problema de rendering do Vitest.
-        // Para ter certeza, você pode testar a string de forma mais exata.
-        
-        // Por exemplo:
         const expectedPrice = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
