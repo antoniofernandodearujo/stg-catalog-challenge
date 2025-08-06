@@ -1,118 +1,193 @@
-# STG Catalog Challenge
+# STG Catalog – E-commerce com Checkout via WhatsApp
 
-## Descrição do Projeto
+## 📝 Sobre o Projeto
+O **STG Catalog** é um sistema de e-commerce completo, desenvolvido em **Next.js 15** com foco em performance, acessibilidade e escalabilidade.  
+Ele permite:
+1. Navegar por um catálogo de produtos com foto, preço e descrição detalhada.
+2. Autenticar-se com e-mail/senha (Supabase Auth).  
+3. Adicionar itens ao carrinho com persistência por usuário.  
+4. Finalizar o pedido gerando uma mensagem automática e pré-formatada no **WhatsApp**.
+---
 
-Este projeto é um catálogo de produtos com funcionalidades de e-commerce, como busca com autocompletar, filtros dinâmicos, integração com Supabase para gerenciamento de carrinho e autenticação, e uma interface otimizada para dispositivos móveis. Ele foi desenvolvido como parte de um desafio técnico.
+## 🔧 Tecnologias Utilizadas
+| Tecnologia | Versão | Por quê? |
+|------------|--------|----------|
+| **Next.js 15** (App Router) | `15.2.x` | Renderização híbrida (SSR/SSG), roteamento de arquivos e ótima DX. |
+| **TypeScript** | `5.x` | Tipagem estática ⇒ menos bugs em produção. |
+| **Tailwind CSS** | `4.x` | Utilitários de estilo rápidos + pré-configurado para dark mode. |
+| **Headless UI** + **Radix UI** | `@headlessui/*`, `@radix-ui/*` | Componentes acessíveis; layout 100 % personalizável com Tailwind. |
+| **Supabase** (`@supabase/supabase-js`) | `2.x` | Auth + Banco de dados relacional (PostgreSQL) em tempo real. |
+| **Zod** | `3.x` | Validação e inferência de tipos. |
+| **Lucide-react** | `0.x` | Ícones leves de código aberto. |
+| **Netlify** | — | CI/CD e hospedagem serverless com previews por pull request. |
 
-## 🚀 Funcionalidades
+## 🤖 IA Utilizada
+| Ferramenta de IA | Como ajudou? | Conteúdo gerado vs. manual |
+|------------------|-------------|----------------------------|
+| **Gemini Falsh 2.5** | Brainstorm de arquitetura, geração de trechos de código e refatoração. | ~40 % gerado, revisado manualmente. |
+| **Claude 3.5 Sonnet** | Criação de documentação e testes unitários. | ~15 % gerado. |
+| **Cursor** | Autocomplete em IDE, jump-to-definition, explicação de código. | Suporte contínuo. |
+| **v0.dev (Vercel)** | Protótipos rápidos de layout e componentes UI. | Protótipos descartados e todos adaptados. |
 
-Nosso catálogo oferece as seguintes funcionalidades:
-
-### 🎯 Funcionalidades Principais
-
--   [x]  **Visualização de Produtos:** Listagem paginada de produtos com detalhes relevantes.
--   [x]  **Filtros Dinâmicos:** Filtros por categoria e preço.
--   [x]  **Busca com Autocomplete:** Sistema de busca rápida com sugestões e histórico.
--   [x]  **Autenticação de Usuário:** Login e cadastro de usuários via Supabase.
--   [x]  **Integração com Carrinho de Compras:** Adicionar, remover e gerenciar itens no carrinho.
--   [x]  **Interface Responsiva:** Design otimizado para uma experiência fluida em desktops, tablets e celulares.
--   [x]  **Modo Escuro (Dark Mode):** Alternância de tema para melhor experiência visual.
--   [x]  **Notificações (Toasts):** Feedback visual para ações do usuário.
-
-### ⚙️ Funcionalidades Técnicas
-
--   [x]  **Next.js 15 (App Router):** Utilização do framework mais recente para SSR e SSG.
--   [x]  **Supabase:** Backend-as-a-Service para banco de dados, autenticação e gerenciamento do carrinho.
--   [x]  **Tailwind CSS:** Framework utilitário para estilização rápida e eficiente.
--   [x]  **React Query:** Gerenciamento de estado do servidor e caching de dados.
--   [x]  **Framer Motion:** Animações fluidas e elegantes na interface.
--   [x]  **Zustand:** Gerenciamento de estado global otimizado.
--   [x]  **Shadcn/ui:** Componentes de interface de usuário reutilizáveis.
--   [x]  **Vitest:** Ambiente de testes unitários e de integração.
+Todas as saídas de IA passaram por revisão para garantir legibilidade, padrões de código e segurança.
 
 ---
 
-## 🛠️ Testes Técnicos
+## ▶️ Como Rodar o Projeto
+1. **Clone o repositório**
+   ```bash
+   git clone [https://github.com/antoniofernandodearujo/stg-catalog-challenge.git](https://github.com/antoniofernandodearujo/stg-catalog-challenge.git)
+   cd stg-catalog-challenge
 
-O projeto utiliza **Vitest** para garantir a qualidade do código e a correta execução das funcionalidades. Os testes foram implementados para cobrir aspectos críticos da aplicação, como a lógica de gerenciamento de estado e as interações com a API do Supabase.
+Instale as dependências (Node 18 +)
+
+```Bash
+yarn install # ou npm install
+```
+
+### Configure as variáveis de ambiente
+
+Crie .env na raiz:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<ID>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<SUA_CHAVE_ANON>
+```
+
+### Prepare o banco Supabase
+
+Importe **scripts/create-tables.sql** e **scripts/seed-products.sql** no SQL Editor do projeto.
+
+Execute em modo dev
+
+``` Bash
+yarn dev
+# Acesse http://localhost:3000
+```
+
+## 🧪 Testes Técnicos
+
+Este projeto utiliza Jest para testes unitários, garantindo a robustez de hooks e lógicas de negócio.
 
 ### Como Rodar os Testes
 
-Para executar os testes e verificar a cobertura do código, siga os passos abaixo:
+- Para executar todos os testes, use o comando:
 
-1.  **Instale as dependências do projeto:**
-    ```bash
-    yarn install
-    # ou
-    npm install
-    ```
+```Bash
+yarn test
+```
 
-2.  **Execute os testes:**
-    Use um dos seguintes comandos para rodar os testes unitários e de integração:
+### Comandos Adicionais:
 
-    -   **Rodar todos os testes uma única vez:**
-        ```bash
-        yarn test
-        # ou
-        npm test
-        ```
-    -   **Rodar os testes em modo `watch` (observa alterações nos arquivos):**
-        ```bash
-        yarn test:watch
-        # ou
-        npm run test:watch
-        ```
+- Modo de Observação (watch):
 
-3.  **Gerar o Relatório de Cobertura de Código:**
-    Este comando executa os testes e gera um relatório detalhado na pasta `coverage/`. Você pode abri-lo no navegador para ver quais linhas de código foram testadas.
+```Bash
+yarn test --watch
+```
 
-    ```bash
-    yarn test:coverage
-    # ou
-    npm run test:coverage
-    ```
+- Relatório de Cobertura de Código:
+O Jest gera um relatório detalhado na pasta coverage/.
 
-    O relatório HTML estará disponível em `coverage/index.html`.
+```Bash
+yarn test --coverage
+```
 
----
+-> Abra o arquivo **coverage/lcov-report/index.html** em seu navegador para uma visualização completa.
 
-## ⚙️ Instalação e Execução
+## 🌐 Links
+- Deploy (Netlify): https://stg-catalog.netlify.app
 
-### Pré-requisitos
+Se clonar este repositório, substitua pelos seus próprios links de produção.
 
--   Node.js (versão 18 ou superior)
--   Yarn ou npm
+### 🎯 Funcionalidades Principais
+### ✅ Obrigatórias
+1. Login/Registro
+- [x] 🔐 Formulário de login (email + senha)
 
-### Configuração
+- [x] ➡️ Link para registro
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/stg-catalog-challenge.git](https://github.com/seu-usuario/stg-catalog-challenge.git)
-    cd stg-catalog-challenge
-    ```
+- [x] ✍️ Formulário de registro (nome completo, email, senha, confirmar senha)
 
-2.  **Instale as dependências:**
-    ```bash
-    yarn install
-    # ou
-    npm install
-    ```
+- [x] 🔍 Validações básicas de formulário
 
-3.  **Configure o Supabase:**
-    Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis, obtidas no seu painel do Supabase:
+- [x] 💬 Feedback de erro/sucesso
 
-    ```bash
-    NEXT_PUBLIC_SUPABASE_URL="[SUA_URL_DO_PROJETO]"
-    NEXT_PUBLIC_SUPABASE_ANON_KEY="[SUA_CHAVE_ANONIMA]"
-    ```
+- [x] 🔄 Redirecionamento automático após login
 
-4.  **Execute o projeto em modo de desenvolvimento:**
-    ```bash
-    yarn dev
-    # ou
-    npm run dev
-    ```
+2. Catálogo Principal
+- [x] 🖼️ Grid de produtos responsivo (mínimo 12 produtos)
 
-O aplicativo estará disponível em `http://localhost:3000`.
+- [x] 💳 Cada produto deve mostrar: imagem, nome, preço
 
----
+- [x] 🛒 Botão "Adicionar ao Carrinho" em cada produto
+
+- [x] 🧭 Navegação para carrinho
+
+3. Detalhes do Produto
+- [x] 📄 Modal ou página com informações completas
+
+- [x] 📸 Imagem maior, nome, descrição completa, preço
+
+- [x] ➕ Botão "Adicionar ao Carrinho"
+
+- [x] ⬅️ Botão para voltar ao catálogo
+
+4. Carrinho de Compras
+- [x] 📋 Lista dos produtos adicionados
+
+- [x] 🔢 Quantidade editável para cada item
+
+- [x] 🗑️ Botão "Remover" para cada item
+
+- [x] 💬 Botão "Finalizar Pedido via WhatsApp"
+
+- [x] 🛍️ Botão "Continuar Comprando"
+
+5. Confirmação
+- [x] 📝 Resumo do pedido antes do envio
+
+- [x] 👤 Dados do cliente
+
+- [x] 📦 Lista final dos produtos
+
+- [x] 💲 Valor total
+
+- [x] ✅ Botão confirmar que redireciona para WhatsApp
+
+### ⭐ Diferenciais
+### Funcionalidades Bônus
+
+- [x] 📜 Histórico de pedidos do usuário
+
+- [x] 🔎 Filtros avançados (categoria, faixa de preço)
+
+- [x] 🌙 Dark mode toggle
+
+Técnico
+- [x] ⚛️ Context API para gerenciamento de estado global
+
+- [x] 🎣 Custom hooks bem estruturados
+
+- [x] 🧪 Testes unitários (Jest/Testing Library)
+
+- [x] 🐞 Error boundary para tratamento de erros
+
+- [x] 📈 SEO otimizado (se Next.js)
+
+- [x] ⚡ Performance otimizada (lazy loading, memoization)
+
+### UX/UI
+- [x] ✨ Animações suaves (Framer Motion)
+
+- [x] ⏳ Skeleton loading durante carregamentos
+
+- [x] 🔔 Toast notifications para feedback
+
+- [x] 🗺️ Breadcrumbs para navegação
+
+- [x] ➡️ Paginação
+
+- [x] 💡 Busca com sugestões/autocomplete
+
+### 📄 Licença
+Distribuído sob licença MIT. Veja LICENSE para mais detalhes.
