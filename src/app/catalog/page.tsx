@@ -1,4 +1,4 @@
-import { createClient } from "@/src/lib/supabase/server"
+import { createClient } from "@/src/lib/server"
 import { ProductGrid } from "@/src/components/catalog/ProductGrid"
 import { SearchAutocomplete } from "@/src/components/catalog/SearchAutocomplete"
 import { AdvancedFilters } from "@/src/components/catalog/AdvancedFilters"

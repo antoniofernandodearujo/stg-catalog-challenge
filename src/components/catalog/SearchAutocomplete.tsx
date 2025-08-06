@@ -203,7 +203,7 @@ export function SearchAutocomplete({ suggestions = [] }: SearchAutocompleteProps
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto"
+              className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto"
             >
               {filteredSuggestions.map((suggestion, index) => (
                 <motion.button
@@ -217,8 +217,8 @@ export function SearchAutocomplete({ suggestions = [] }: SearchAutocompleteProps
                   }}
                   className={`
                     w-full px-4 py-3 text-left flex items-center space-x-3 transition-colors duration-150 text-sm
-                    hover:bg-gray-100
-                    ${highlightedIndex === index ? 'bg-gray-100' : 'bg-transparent'}
+                    hover:bg-gray-100 dark:hover:bg-gray-700
+                    ${highlightedIndex === index ? 'bg-gray-100 dark:bg-gray-700' : 'bg-transparent'}
                     highlighted-${index}
                   `}
                 >

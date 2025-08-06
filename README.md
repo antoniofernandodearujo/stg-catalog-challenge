@@ -1,95 +1,118 @@
-# STG Catalog – E-commerce com Checkout via WhatsApp
+# STG Catalog Challenge
 
-## 📝 Sobre o Projeto
-O **STG Catalog** é um sistema de e-commerce completo, desenvolvido em **Next.js 15** com foco em performance, acessibilidade e escalabilidade.  
-Ele permite:
-1. Navegar por um catálogo de produtos com fotos, preços e descrições detalhadas.  
-2. Autenticar-se com e-mail/senha (Supabase Auth).  
-3. Adicionar itens ao carrinho com persistência por usuário.  
-4. Finalizar o pedido gerando uma mensagem automática e pré-formatada no **WhatsApp**, onde a conversa de pagamento e entrega acontece.
+## Descrição do Projeto
 
-O objetivo é demonstrar um fluxo de compra enxuto – do browse ao checkout – sem depender de gateways de pagamento reais, reduzindo custos e complexidade para MVPs ou pequenos negócios.
+Este projeto é um catálogo de produtos com funcionalidades de e-commerce, como busca com autocompletar, filtros dinâmicos, integração com Supabase para gerenciamento de carrinho e autenticação, e uma interface otimizada para dispositivos móveis. Ele foi desenvolvido como parte de um desafio técnico.
 
----
+## 🚀 Funcionalidades
 
-## 🔧 Tecnologias Utilizadas
-| Tecnologia | Versão | Por quê? |
-|------------|--------|----------|
-| **Next.js 15** (App Router) | `15.2.x` | Renderização híbrida (SSR/SSG), roteamento de arquivos e ótima DX. |
-| **TypeScript** | `5.x` | Tipagem estática ⇒ menos bugs em produção. |
-| **Tailwind CSS** | `4.x` | Utilitários de estilo rápidos + pré-configurado para dark mode. |
-| **Headless UI** + **Radix UI** | `@headlessui/*`, `@radix-ui/*` | Componentes acessíveis; layout 100 % personalizável com Tailwind. |
-| **Supabase** (`@supabase/supabase-js`) | `2.x` | Auth + Banco de dados relacional (PostgreSQL) em tempo real. |
-| **@tanstack/react-query** | `5.x` | Cache, sincronização e mutações de dados declarativas. |
-| **Zod** | `3.x` | Validação e inferência de tipos. |
-| **Lucide-react** | `0.x` | Ícones leves de código aberto. |
-| **Netlify** | — | CI/CD e hospedagem serverless com previews por pull request. |
+Nosso catálogo oferece as seguintes funcionalidades:
 
-> Sinta-se livre para incluir outras bibliotecas, mas **prefira Headless UI + Tailwind** quando possível.
+### 🎯 Funcionalidades Principais
 
----
+-   [x]  **Visualização de Produtos:** Listagem paginada de produtos com detalhes relevantes.
+-   [x]  **Filtros Dinâmicos:** Filtros por categoria e preço.
+-   [x]  **Busca com Autocomplete:** Sistema de busca rápida com sugestões e histórico.
+-   [x]  **Autenticação de Usuário:** Login e cadastro de usuários via Supabase.
+-   [x]  **Integração com Carrinho de Compras:** Adicionar, remover e gerenciar itens no carrinho.
+-   [x]  **Interface Responsiva:** Design otimizado para uma experiência fluida em desktops, tablets e celulares.
+-   [x]  **Modo Escuro (Dark Mode):** Alternância de tema para melhor experiência visual.
+-   [x]  **Notificações (Toasts):** Feedback visual para ações do usuário.
 
-## 🤖 IA Utilizada
-| Ferramenta de IA | Como ajudou? | Conteúdo gerado vs. manual |
-|------------------|-------------|----------------------------|
-| **ChatGPT 4o** | Brainstorm de arquitetura, geração de trechos de código e refatoração. | ~40 % gerado, revisado manualmente. |
-| **Claude 3 Sonnet** | Criação de documentação e testes unitários. | ~15 % gerado. |
-| **Cursor** | Autocomplete em IDE, jump-to-definition, explicação de código legado. | Suporte contínuo. |
-| **v0.dev (Vercel)** | Protótipos rápidos de layout e componentes UI. | Protótipos descartados ou adaptados. |
+### ⚙️ Funcionalidades Técnicas
 
-Todas as saídas de IA passaram por revisão humana para garantir legibilidade, padrões de código e segurança.
+-   [x]  **Next.js 15 (App Router):** Utilização do framework mais recente para SSR e SSG.
+-   [x]  **Supabase:** Backend-as-a-Service para banco de dados, autenticação e gerenciamento do carrinho.
+-   [x]  **Tailwind CSS:** Framework utilitário para estilização rápida e eficiente.
+-   [x]  **React Query:** Gerenciamento de estado do servidor e caching de dados.
+-   [x]  **Framer Motion:** Animações fluidas e elegantes na interface.
+-   [x]  **Zustand:** Gerenciamento de estado global otimizado.
+-   [x]  **Shadcn/ui:** Componentes de interface de usuário reutilizáveis.
+-   [x]  **Vitest:** Ambiente de testes unitários e de integração.
 
 ---
 
-## ▶️ Como Rodar o Projeto
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/antoniofernandodearuji/stg-catalog.git
-   cd stg-catalog
-   ```
-2. **Instale as dependências** (Node 18 +)
-   ```bash
-   pnpm install # ou npm/yarn
-   ```
-3. **Configure as variáveis de ambiente**
-   Crie `.env.local` na raiz:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://<ID>.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=<SUA_CHAVE_ANON>
-   ```
-4. **Prepare o banco Supabase**
-   - Importe `scripts/create-tables.sql` e `scripts/seed-products.sql` no **SQL Editor** do projeto.
-5. **Execute em modo dev**
-   ```bash
-   pnpm dev
-   # Acesse http://localhost:3000
-   ```
+## 🛠️ Testes Técnicos
+
+O projeto utiliza **Vitest** para garantir a qualidade do código e a correta execução das funcionalidades. Os testes foram implementados para cobrir aspectos críticos da aplicação, como a lógica de gerenciamento de estado e as interações com a API do Supabase.
+
+### Como Rodar os Testes
+
+Para executar os testes e verificar a cobertura do código, siga os passos abaixo:
+
+1.  **Instale as dependências do projeto:**
+    ```bash
+    yarn install
+    # ou
+    npm install
+    ```
+
+2.  **Execute os testes:**
+    Use um dos seguintes comandos para rodar os testes unitários e de integração:
+
+    -   **Rodar todos os testes uma única vez:**
+        ```bash
+        yarn test
+        # ou
+        npm test
+        ```
+    -   **Rodar os testes em modo `watch` (observa alterações nos arquivos):**
+        ```bash
+        yarn test:watch
+        # ou
+        npm run test:watch
+        ```
+
+3.  **Gerar o Relatório de Cobertura de Código:**
+    Este comando executa os testes e gera um relatório detalhado na pasta `coverage/`. Você pode abri-lo no navegador para ver quais linhas de código foram testadas.
+
+    ```bash
+    yarn test:coverage
+    # ou
+    npm run test:coverage
+    ```
+
+    O relatório HTML estará disponível em `coverage/index.html`.
 
 ---
 
-## 🌐 Links
-- **Deploy (Netlify)**: https://stg-catalog.netlify.app  
-- **Projeto Supabase (público)**: https://app.supabase.com/project/<ID>
+## ⚙️ Instalação e Execução
 
-> Se clonar este repositório, substitua pelos seus próprios links de produção.
+### Pré-requisitos
+
+-   Node.js (versão 18 ou superior)
+-   Yarn ou npm
+
+### Configuração
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/seu-usuario/stg-catalog-challenge.git](https://github.com/seu-usuario/stg-catalog-challenge.git)
+    cd stg-catalog-challenge
+    ```
+
+2.  **Instale as dependências:**
+    ```bash
+    yarn install
+    # ou
+    npm install
+    ```
+
+3.  **Configure o Supabase:**
+    Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis, obtidas no seu painel do Supabase:
+
+    ```bash
+    NEXT_PUBLIC_SUPABASE_URL="[SUA_URL_DO_PROJETO]"
+    NEXT_PUBLIC_SUPABASE_ANON_KEY="[SUA_CHAVE_ANONIMA]"
+    ```
+
+4.  **Execute o projeto em modo de desenvolvimento:**
+    ```bash
+    yarn dev
+    # ou
+    npm run dev
+    ```
+
+O aplicativo estará disponível em `http://localhost:3000`.
 
 ---
-
-## ✅ Funcionalidades
-### Obrigatórias
-- [x] Autenticação de usuários (e-mail/senha)
-- [x] Listagem de produtos paginada e responsiva
-- [x] Detalhe do produto com galeria de imagens
-- [x] Carrinho de compras com update de quantidades
-- [x] Persistência do carrinho por usuário (Supabase)
-- [x] Checkout via geração de mensagem no WhatsApp
-
-### Opcionais / Diferenciais
-- [x] Busca e filtro por nome/categoria
-- [x] Dark mode automático (sistema / toggle)
-- [x] Testes unitários básicos com Vitest
-- [x] Deploy contínuo (CI) na Netlify
----
-
-## 📄 Licença
-Distribuído sob licença MIT. Veja `LICENSE` para mais detalhes.

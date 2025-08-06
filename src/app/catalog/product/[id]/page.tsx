@@ -1,4 +1,4 @@
-import { createClient } from "@/src/lib/supabase/server"
+import { createClient } from "@/src/lib/server"
 import { ProductDetail } from "@/src/components/catalog/ProductDetail"
 import { Header } from "@/src/components/layout/Header"
 import { notFound } from "next/navigation"

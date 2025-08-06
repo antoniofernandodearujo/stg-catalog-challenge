@@ -1,4 +1,4 @@
-import { createClient } from "@/src/lib/supabase/server"
+import { createClient } from "@/src/lib/server"
 import { CheckoutPage } from "@/src/components/checkout/CheckoutPage"
 import { Header } from "@/src/components/layout/Header"
 import { redirect } from "next/navigation"

@@ -1,4 +1,3 @@
--- Insert sample products
 INSERT INTO products (name, description, price, image_url, category) VALUES
 -- Eletrônicos
 ('iPhone 15 Pro', 'Smartphone Apple com chip A17 Pro, câmera de 48MP e tela Super Retina XDR de 6.1 polegadas', 8999.00, 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500', 'Eletrônicos'),
