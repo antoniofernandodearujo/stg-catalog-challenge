@@ -7,6 +7,9 @@ Ele permite:
 2. Autenticar-se com e-mail/senha (Supabase Auth).  
 3. Adicionar itens ao carrinho com persistência por usuário.  
 4. Finalizar o pedido gerando uma mensagem automática e pré-formatada no **WhatsApp**.
+
+Acesse aqui: https://stg-catalog.netlify.app
+
 ---
 
 ## 🔧 Tecnologias Utilizadas
