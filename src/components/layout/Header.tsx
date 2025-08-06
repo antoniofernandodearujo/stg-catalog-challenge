@@ -8,11 +8,14 @@ import { ShoppingCart, LogOut, User, LogIn, Icon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/src/components/ui/theme-toggle"
 import { useApp } from "@/src/contexts/AppContext"
+import { useIsMobile } from "@/src/hooks/useMobile"
+import { is } from "date-fns/locale"
 
 export function Header() {
   const { user, signOut } = useAuth()
   const { cartItems } = useCart()
   const { state } = useApp()
+  const isMobile = useIsMobile()
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
@@ -22,7 +25,11 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/catalog" className="text-2xl font-bold text-primary dark:text-white">
-              STG E-commerce Catalog
+              {isMobile ? (
+                <span>STG E-commerce</span>
+              ) : (
+                <span>STG Catalog E-commerce</span>
+              )}
             </Link>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">

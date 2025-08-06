@@ -32,7 +32,9 @@ export function ThemeToggle({ size = 'sm', variant = 'ghost' }: ThemeToggleProps
           transition={{ duration: 0.3 }}
         >
           {state.darkMode ? (
+            <>
             <Sun className={`h-${iconSize} w-${iconSize}`} />
+            </>
           ) : (
             <Moon className={`h-${iconSize} w-${iconSize}`} />
           )}
